@@ -1,0 +1,248 @@
+---
+title: "data"
+author: "20173250 정경현"
+date: "2019년 5월 13일"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#1등당첨자중 가장 큰 돈의 값 
+```{r}
+dt <- read.csv("./data/rottodata.csv",header = T,stringsAsFactors = F)
+dt <- dt[,-1]
+head(dt)
+colnames(dt) <- c("tt","dl",
+                  "1pp","1pm","2pp","2pm","3pp","3pm","4pp","4pm","5pp","5pm",
+                  "nb1","nb2","nb3","nb4","nb5","nb6","bnb")
+head(dt)
+str(dt)
+is.na(dt$`1pp`)
+mp1 <- dt$`1pm`/dt$`1pp`
+mp1[which(mp1=="NaN")] <- 0
+mp1
+max(mp1)
+```
+
+#번호분석집계
+```{r}
+nb <- data.frame(dt$nb1,dt$nb2,dt$nb3,dt$nb4,dt$nb5,dt$nb6,dt$bnb)
+head(nb)
+names(nb) <- c("nb1","nb2","nb3","nb4","nb5","nb6","bnb")
+head(nb)
+n1 <- as.data.frame(table(nb$nb1))
+n2 <- as.data.frame(table(nb$nb2))
+n3 <- as.data.frame(table(nb$nb3))
+n4 <- as.data.frame(table(nb$nb4))
+n5 <- as.data.frame(table(nb$nb5))
+n6 <- as.data.frame(table(nb$nb6))
+#n7b <- as.data.frame(table(nb$bnb))
+library(tidyverse)
+library(dplyr)
+library(readr)
+row <- c(1:45)
+rdf <- data.frame(row)
+rdf$row <- as.factor(rdf$row)
+colnames(rdf) <- c("Var1")
+(n11 <- full_join(rdf,n1))
+(n22 <- full_join(rdf,n2))
+(n33 <- full_join(rdf,n3))
+(n44 <- full_join(rdf,n4))
+(n55 <- full_join(rdf,n5))
+(n66 <- full_join(rdf,n6))
+#(n77 <- full_join(rdf,n7b))
+ndf <- data.frame(n11$Freq,n22$Freq,n33$Freq,n44$Freq,n55$Freq,n66$Freq)
+colnames(ndf) <- c("nb1","nb2","nb3","nb4","nb5","nb6")
+ndf
+s1 <- sum(ndf[1,],na.rm = T)
+s2 <- sum(ndf[2,],na.rm = T)
+s3 <- sum(ndf[3,],na.rm = T)
+s4 <- sum(ndf[4,],na.rm = T)
+s5 <- sum(ndf[5,],na.rm = T)
+s6 <- sum(ndf[6,],na.rm = T)
+s7 <- sum(ndf[7,],na.rm = T)
+s8 <- sum(ndf[8,],na.rm = T)
+s9 <- sum(ndf[9,],na.rm = T)
+s10 <- sum(ndf[10,],na.rm = T)
+s11 <- sum(ndf[11,],na.rm = T)
+s12 <- sum(ndf[12,],na.rm = T)
+s13 <- sum(ndf[13,],na.rm = T)
+s14 <- sum(ndf[14,],na.rm = T)
+s15 <- sum(ndf[15,],na.rm = T)
+s16 <- sum(ndf[16,],na.rm = T)
+s17 <- sum(ndf[17,],na.rm = T)
+s18 <- sum(ndf[18,],na.rm = T)
+s19 <- sum(ndf[19,],na.rm = T)
+s20 <- sum(ndf[20,],na.rm = T)
+s21 <- sum(ndf[21,],na.rm = T)
+s22 <- sum(ndf[22,],na.rm = T)
+s23 <- sum(ndf[23,],na.rm = T)
+s24 <- sum(ndf[24,],na.rm = T)
+s25 <- sum(ndf[25,],na.rm = T)
+s26 <- sum(ndf[26,],na.rm = T)
+s27 <- sum(ndf[27,],na.rm = T)
+s28 <- sum(ndf[28,],na.rm = T)
+s29 <- sum(ndf[29,],na.rm = T)
+s30 <- sum(ndf[30,],na.rm = T)
+s31 <- sum(ndf[31,],na.rm = T)
+s32 <- sum(ndf[32,],na.rm = T)
+s33 <- sum(ndf[33,],na.rm = T)
+s34 <- sum(ndf[34,],na.rm = T)
+s35 <- sum(ndf[35,],na.rm = T)
+s36 <- sum(ndf[36,],na.rm = T)
+s37 <- sum(ndf[37,],na.rm = T)
+s38 <- sum(ndf[38,],na.rm = T)
+s39 <- sum(ndf[39,],na.rm = T)
+s40 <- sum(ndf[40,],na.rm = T)
+s41 <- sum(ndf[41,],na.rm = T)
+s42 <- sum(ndf[42,],na.rm = T)
+s43 <- sum(ndf[43,],na.rm = T)
+s44 <- sum(ndf[44,],na.rm = T)
+s45 <- sum(ndf[45,],na.rm = T)
+sum <- c(s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s6,s17,s18,s19,s20,
+         s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32,s33,s34,s35,s36,s37,
+         s38,s39,s40,s41,s42,s43,s44,s45)
+ndf$sum <- sum
+ndf
+tt <- 858
+per <- ndf$sum/tt
+per <- as.data.frame(per)
+ndf <- data.frame(ndf,per)
+ndf
+```
+
+
+#연관규칙 
+```{r}
+#install.packages("arules")
+library(arules)
+#install.packages("reshape")
+#library(reshape)
+num <- read.csv("C:/Users/JGH0208/Desktop/20191/DAMDA/DCD/rottodistribution/data/rottonum.csv",header = F,stringsAsFactors = F)
+head(num)
+a <- paste0("num$V",1:858)
+nc <- c(num$V1,num$V2,num$V3,num$V4,num$V5,num$V6,num$V7,num$V8,num$V9,num$V10,
+num$V11,num$V12,num$V13,num$V14,num$V15,num$V16,num$V17,num$V18,num$V19,num$V20,
+num$V21,num$V22,num$V23,num$V24,num$V25,num$V26,num$V27,num$V28,num$V29,num$V30,
+num$V31,num$V32,num$V33,num$V34,num$V35,num$V36,num$V37,num$V38,num$V39,num$V40,
+num$V41,num$V42,num$V43,num$V44,num$V45,num$V46,num$V47,num$V48,num$V49,num$V50,
+num$V51,num$V52,num$V53,num$V54,num$V55,num$V56,num$V57,num$V58,num$V59,num$V60,
+num$V61,num$V62,num$V63,num$V64,num$V65,num$V66,num$V67,num$V68,num$V69,num$V70,
+num$V71,num$V72,num$V73,num$V74,num$V75,num$V76,num$V77,num$V78,num$V79,num$V80,
+num$V81,num$V82,num$V83,num$V84,num$V85,num$V86,num$V87,num$V88,num$V89,num$V90,
+num$V91,num$V92,num$V93,num$V94,num$V95,num$V96,num$V97,num$V98,num$V99,num$V100,
+num$V101,num$V102,num$V103,num$V104,num$V105,num$V106,num$V107,num$V108,num$V109,num$V110,
+num$V111,num$V112,num$V113,num$V114,num$V115,num$V116,num$V117,num$V118,num$V119,num$V120,
+num$V121,num$V122,num$V123,num$V124,num$V125,num$V126,num$V127,num$V128,num$V129,num$V130,
+num$V131,num$V132,num$V133,num$V134,num$V135,num$V136,num$V137,num$V138,num$V139,num$V140,
+num$V141,num$V142,num$V143,num$V144,num$V145,num$V146,num$V147,num$V148,num$V149,num$V150,
+num$V151,num$V152,num$V153,num$V154,num$V155,num$V156,num$V157,num$V158,num$V159,num$V160,
+num$V161,num$V162,num$V163,num$V164,num$V165,num$V166,num$V167,num$V168,num$V169,num$V170,
+num$V171,num$V172,num$V173,num$V174,num$V175,num$V176,num$V177,num$V178,num$V179,num$V180,
+num$V181,num$V182,num$V183,num$V184,num$V185,num$V186,num$V187,num$V188,num$V189,num$V190,
+num$V191,num$V192,num$V193,num$V194,num$V195,num$V196,num$V197,num$V198,num$V199,num$V200,
+num$V201,num$V202,num$V203,num$V204,num$V205,num$V206,num$V207,num$V208,num$V209,num$V210,
+num$V211,num$V212,num$V213,num$V214,num$V215,num$V216,num$V217,num$V218,num$V219,num$V220,
+num$V221,num$V222,num$V223,num$V224,num$V225,num$V226,num$V227,num$V228,num$V229,num$V230,
+num$V231,num$V232,num$V233,num$V234,num$V235,num$V236,num$V237,num$V238,num$V239,num$V240,
+num$V241,num$V242,num$V243,num$V244,num$V245,num$V246,num$V247,num$V248,num$V249,num$V250,
+num$V251,num$V252,num$V253,num$V254,num$V255,num$V256,num$V257,num$V258,num$V259,num$V260,
+num$V261,num$V262,num$V263,num$V264,num$V265,num$V266,num$V267,num$V268,num$V269,num$V270,
+num$V271,num$V272,num$V273,num$V274,num$V275,num$V276,num$V277,num$V278,num$V279,num$V280,
+num$V281,num$V282,num$V283,num$V284,num$V285,num$V286,num$V287,num$V288,num$V289,num$V290,
+num$V291,num$V292,num$V293,num$V294,num$V295,num$V296,num$V297,num$V298,num$V299,num$V300,
+num$V301,num$V302,num$V303,num$V304,num$V305,num$V306,num$V307,num$V308,num$V309,num$V310,
+num$V311,num$V312,num$V313,num$V314,num$V315,num$V316,num$V317,num$V318,num$V319,num$V320,
+num$V321,num$V322,num$V323,num$V324,num$V325,num$V326,num$V327,num$V328,num$V329,num$V330,
+num$V331,num$V332,num$V333,num$V334,num$V335,num$V336,num$V337,num$V338,num$V339,num$V340,
+num$V341,num$V342,num$V343,num$V344,num$V345,num$V346,num$V347,num$V348,num$V349,num$V350,
+num$V351,num$V352,num$V353,num$V354,num$V355,num$V356,num$V357,num$V358,num$V359,num$V360,
+num$V361,num$V362,num$V363,num$V364,num$V365,num$V366,num$V367,num$V368,num$V369,num$V370,
+num$V371,num$V372,num$V373,num$V374,num$V375,num$V376,num$V377,num$V378,num$V379,num$V380,
+num$V381,num$V382,num$V383,num$V384,num$V385,num$V386,num$V387,num$V388,num$V389,num$V390,
+num$V391,num$V392,num$V393,num$V394,num$V395,num$V396,num$V397,num$V398,num$V399,num$V400,
+num$V401,num$V402,num$V403,num$V404,num$V405,num$V406,num$V407,num$V408,num$V409,num$V410,
+num$V411,num$V412,num$V413,num$V414,num$V415,num$V416,num$V417,num$V418,num$V419,num$V420,
+num$V421,num$V422,num$V423,num$V424,num$V425,num$V426,num$V427,num$V428,num$V429,num$V430,
+num$V431,num$V432,num$V433,num$V434,num$V435,num$V436,num$V437,num$V438,num$V439,num$V440,
+num$V441,num$V442,num$V443,num$V444,num$V445,num$V446,num$V447,num$V448,num$V449,num$V450,
+num$V451,num$V452,num$V453,num$V454,num$V455,num$V456,num$V457,num$V458,num$V459,num$V460,
+num$V461,num$V462,num$V463,num$V464,num$V465,num$V466,num$V467,num$V468,num$V469,num$V470,
+num$V471,num$V472,num$V473,num$V474,num$V475,num$V476,num$V477,num$V478,num$V479,num$V480,
+num$V481,num$V482,num$V483,num$V484,num$V485,num$V486,num$V487,num$V488,num$V489,num$V490,
+num$V491,num$V492,num$V493,num$V494,num$V495,num$V496,num$V497,num$V498,num$V499,num$V500,
+num$V501,num$V502,num$V503,num$V504,num$V505,num$V506,num$V507,num$V508,num$V509,num$V510,
+num$V511,num$V512,num$V513,num$V514,num$V515,num$V516,num$V517,num$V518,num$V519,num$V520,
+num$V521,num$V522,num$V523,num$V524,num$V525,num$V526,num$V527,num$V528,num$V529,num$V530,
+num$V531,num$V532,num$V533,num$V534,num$V535,num$V536,num$V537,num$V538,num$V539,num$V540,
+num$V541,num$V542,num$V543,num$V544,num$V545,num$V546,num$V547,num$V548,num$V549,num$V550,
+num$V551,num$V552,num$V553,num$V554,num$V555,num$V556,num$V557,num$V558,num$V559,num$V560,
+num$V561,num$V562,num$V563,num$V564,num$V565,num$V566,num$V567,num$V568,num$V569,num$V570,
+num$V571,num$V572,num$V573,num$V574,num$V575,num$V576,num$V577,num$V578,num$V579,num$V580,
+num$V581,num$V582,num$V583,num$V584,num$V585,num$V586,num$V587,num$V588,num$V589,num$V590,
+num$V591,num$V592,num$V593,num$V594,num$V595,num$V596,num$V597,num$V598,num$V599,num$V600,
+num$V601,num$V602,num$V603,num$V604,num$V605,num$V606,num$V607,num$V608,num$V609,num$V610,
+num$V611,num$V612,num$V613,num$V614,num$V615,num$V616,num$V617,num$V618,num$V619,num$V620,
+num$V621,num$V622,num$V623,num$V624,num$V625,num$V626,num$V627,num$V628,num$V629,num$V630,
+num$V631,num$V632,num$V633,num$V634,num$V635,num$V636,num$V637,num$V638,num$V639,num$V640,
+num$V641,num$V642,num$V643,num$V644,num$V645,num$V646,num$V647,num$V648,num$V649,num$V650,
+num$V651,num$V652,num$V653,num$V654,num$V655,num$V656,num$V657,num$V658,num$V659,num$V660,
+num$V661,num$V662,num$V663,num$V664,num$V665,num$V666,num$V667,num$V668,num$V669,num$V670,
+num$V671,num$V672,num$V673,num$V674,num$V675,num$V676,num$V677,num$V678,num$V679,num$V680,
+num$V681,num$V682,num$V683,num$V684,num$V685,num$V686,num$V687,num$V688,num$V689,num$V690,
+num$V691,num$V692,num$V693,num$V694,num$V695,num$V696,num$V697,num$V698,num$V699,num$V700,
+num$V701,num$V702,num$V703,num$V704,num$V705,num$V706,num$V707,num$V708,num$V709,num$V710,
+num$V711,num$V712,num$V713,num$V714,num$V715,num$V716,num$V717,num$V718,num$V719,num$V720,
+num$V721,num$V722,num$V723,num$V724,num$V725,num$V726,num$V727,num$V728,num$V729,num$V730,
+num$V731,num$V732,num$V733,num$V734,num$V735,num$V736,num$V737,num$V738,num$V739,num$V740,
+num$V741,num$V742,num$V743,num$V744,num$V745,num$V746,num$V747,num$V748,num$V749,num$V750,
+num$V751,num$V752,num$V753,num$V754,num$V755,num$V756,num$V757,num$V758,num$V759,num$V760,
+num$V761,num$V762,num$V763,num$V764,num$V765,num$V766,num$V767,num$V768,num$V769,num$V770,
+num$V771,num$V772,num$V773,num$V774,num$V775,num$V776,num$V777,num$V778,num$V779,num$V780,
+num$V781,num$V782,num$V783,num$V784,num$V785,num$V786,num$V787,num$V788,num$V789,num$V790,
+num$V791,num$V792,num$V793,num$V794,num$V795,num$V796,num$V797,num$V798,num$V799,num$V800,
+num$V801,num$V802,num$V803,num$V804,num$V805,num$V806,num$V807,num$V808,num$V809,num$V810,
+num$V811,num$V812,num$V813,num$V814,num$V815,num$V816,num$V817,num$V818,num$V819,num$V820,
+num$V821,num$V822,num$V823,num$V824,num$V825,num$V826,num$V827,num$V828,num$V829,num$V830,
+num$V831,num$V832,num$V833,num$V834,num$V835,num$V836,num$V837,num$V838,num$V839,num$V840,
+num$V841,num$V842,num$V843,num$V844,num$V845,num$V846,num$V847,num$V848,num$V849,num$V850,
+num$V851,num$V852,num$V853,num$V854,num$V855,num$V856,num$V857,num$V858)
+nc
+cun <- rep(1:858,each=6)
+cun <- paste0("N.",cun)
+cun
+ltdf <- data.frame(cun,nc)
+ltdf
+ltli <- split(ltdf$nc,ltdf$cun)
+ltlitr <- as(ltli,"transactions")
+ltlitr
+summary(ltlitr)
+itemFrequency(ltlitr)
+itemFrequencyPlot(ltlitr,topN=5,main="지지도 상위 5순위")
+ltlitrul <- apriori(ltlitr)
+summary(ltlitrul)
+#inspect(cndfmt)
+#apriori(cndfmt, parameter=list(minlen=6))
+#cnl <- eclat(cndfmt, parameter=list(support=2/9835,minlen=2 ,maxlen=10))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
